@@ -44,16 +44,18 @@ public abstract class AnimalController : MonoBehaviour
     protected float maxThirst = 10f;
     public float energy = 10f;
     protected float maxEnergy = 10f;
+    public float desireToMate = 0f;
+    protected float maxDesireToMate = 5f;
 
     //individual characteristics
-    protected float hungerRate = 0.2f; //0 to 1
+    protected float hungerRate = 0.4f; //0 to 1
     protected float thirstRate = 0.1f; //0 to 1
     protected float energyRate = 0.1f; //0 to 1
-    protected float matingRate = 1f; // 1 to 10
+    protected float matingRate = 0.1f; // 1 to 10
     public Gender gender;
-    public float age = 5;
+    public float age = 5.5f;
     public float lifeExpectancy = 15;
-    public float mateAge = 5;
+    public float mateAge = 5f;
     public bool pregnant = false;
     public float pregnancyPeriod = 20f;
 
@@ -64,12 +66,11 @@ public abstract class AnimalController : MonoBehaviour
 
     //movement
     public float maxSpeed = 5f;
-
     public float wanderSpeed = 3f;
     public float speed = 0f;
     public Vector3 velocity = Vector3.zero;
-    public float wanderStrength = 0.1f;
-    public float steerStrength = 0.05f;
+    public float wanderStrength = 0.05f;
+    public float steerStrength = 0.1f;
     public float deltaSpeed = 1f;
     private Vector3 desiredDirection;
     public float accelerationStrength = 1f;
@@ -111,9 +112,13 @@ public abstract class AnimalController : MonoBehaviour
         hunger += hungerRate / (energy + nonDivideByZeroConst) * Time.deltaTime;
         //thirst += thirstRate / (energy + nonDivideByZeroConst) * Time.deltaTime;
         energy -= energyRate * (hunger/2 + thirst/2) * speed/maxSpeed * Time.deltaTime - 0.01f;
+        desireToMate += mateAge >= age || pregnant ? 0 : lifeExpectancy/(lifeExpectancy + age - mateAge) * matingRate * Time.deltaTime;
+
         energy = Mathf.Clamp(energy, 0, maxEnergy);
         hunger = Mathf.Clamp(hunger, 0, maxHunger);
         thirst = Mathf.Clamp(thirst, 0, maxThirst);
+        desireToMate = Mathf.Clamp(desireToMate, 0, maxDesireToMate);
+
         if(hunger == maxHunger) life -= 0.1f * Time.deltaTime;
         if(thirst == maxThirst) life -= 0.1f * Time.deltaTime;
         if(energy == 0) life -= 0.1f * Time.deltaTime;
@@ -128,7 +133,7 @@ public abstract class AnimalController : MonoBehaviour
             Needs.Rest => energy / maxEnergy,
             _ => 0,
         };
-        urgencyLevel = Mathf.Clamp(urgencyLevel, 0f, 1f);
+        urgencyLevel = Mathf.Clamp(urgencyLevel, 0.5f, 1f);
     }
 
     void SetFearLevelAndEscapeRoute(){
@@ -145,15 +150,17 @@ public abstract class AnimalController : MonoBehaviour
     }
 
     void SetPriorityNeed(){
-        float needToMate = mateAge >= age || pregnant ? 0 : lifeExpectancy/(age - mateAge) * matingRate;
-        float maxNeed = Mathf.Max(hunger, thirst, needToMate, maxEnergy/Mathf.Max(energy, 1f), fearLevel, 1f);
+        float maxNeed = Mathf.Max(hunger, thirst, desireToMate, maxEnergy/Mathf.Max(energy, 1f), fearLevel, 1f);
+        Needs previousPriorityNeed = priorityNeed;
 
-        if(maxNeed == needToMate) priorityNeed = Needs.Mate;
+        if(maxNeed == desireToMate) priorityNeed = Needs.Mate;
         if(maxNeed == hunger) priorityNeed = Needs.Food;
         if(maxNeed == thirst) priorityNeed = Needs.Water;
         if(maxNeed == maxEnergy/Mathf.Max(energy, 1f)) priorityNeed = Needs.Rest;
         if(maxNeed == fearLevel) priorityNeed = Needs.Escape;
         if(maxNeed <= 1) priorityNeed = Needs.None;
+
+        if(previousPriorityNeed != priorityNeed) target = null;
 
     }
 
@@ -262,6 +269,7 @@ public abstract class AnimalController : MonoBehaviour
     }
 
     void GetPregnant(){
+        desireToMate = 0;
         pregnant = true;
         StartCoroutine(Pregnancy());
     }
@@ -270,8 +278,11 @@ public abstract class AnimalController : MonoBehaviour
         Stop();
         if (mate.GetComponent<AnimalController>().gender == Gender.Female && !mate.GetComponent<AnimalController>().pregnant) {
             mate.GetComponent<AnimalController>().GetPregnant();
+            desireToMate = 0;
+
         } else if(gender == Gender.Female && !pregnant){
             GetPregnant();
+            mate.GetComponent<AnimalController>().desireToMate = 0;
         }
     }
 
@@ -280,6 +291,7 @@ public abstract class AnimalController : MonoBehaviour
     }
 
     protected abstract void TryToMate();
+    protected abstract void GrowUp();
 
     void Flee() {
         AccelerateToSpeed(maxSpeed);
@@ -319,6 +331,12 @@ public abstract class AnimalController : MonoBehaviour
     void FixedUpdate()
     {   
         if(state == AnimalState.Dead) return;
+
+        //keep animal from falling sideways
+        var rot = Quaternion.FromToRotation(transform.up, Vector3.up);
+        GetComponent<Rigidbody>().AddTorque(new Vector3(rot.x, rot.y, rot.z)*5f);
+
+        if(age >= mateAge && LayerMask.GetMask("Nothing") == mateLayerMask) GrowUp(); 
         SetFearLevelAndEscapeRoute();
         UpdateState();
         UpdateLifeStatsOverTime();

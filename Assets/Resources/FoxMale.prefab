@@ -149,16 +149,19 @@ MonoBehaviour:
   hunger: 0
   thirst: 0
   energy: 10
+  desireToMate: 0
   gender: 0
   age: 5
   lifeExpectancy: 15
   mateAge: 5
+  pregnant: 0
+  pregnancyPeriod: 20
   foodLayerMask:
     serializedVersion: 2
-    m_Bits: 2176
+    m_Bits: 1054848
   mateLayerMask:
     serializedVersion: 2
-    m_Bits: 0
+    m_Bits: 256
   state: 0
   priorityNeed: 5
   maxSpeed: 3

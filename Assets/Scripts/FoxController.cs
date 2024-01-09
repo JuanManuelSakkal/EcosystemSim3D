@@ -17,12 +17,45 @@ public class FoxController : PredatorController
         return hunger > maxHunger / 3;
 
     }
-
     override protected void TryToMate(){
+        AccelerateToSpeed(maxSpeed * urgencyLevel);
+        GoToTarget();
+    }
+    private void InitializeFox(Vector3 position){
+        Gender randomGender = Random.Range(0, 1) > 0.75f ? Gender.Female : Gender.Male;
+        GameObject modelToLoad;
+        if(randomGender == Gender.Female){
+            modelToLoad = Resources.Load("FoxFemaleChild") as GameObject;
+        } else {
+            modelToLoad = Resources.Load("FoxMaleChild") as GameObject;
+        }
+        GameObject newFox = Instantiate(modelToLoad, position, Quaternion.identity);
+        newFox.transform.parent = transform.parent;
+        newFox.GetComponent<FoxController>().age = 0;
+        newFox.GetComponent<FoxController>().gender = randomGender;
 
     }
     
     override protected void HaveChildren(){
+        InitializeFox(transform.position + Vector3.right);
+        InitializeFox(transform.position - Vector3.right);
+
+    }
+    override protected void GrowUp(){
+        GameObject modelToLoad;
+        if(gender == Gender.Female){
+            modelToLoad = Resources.Load("FoxFemale") as GameObject;
+        } else {
+            modelToLoad = Resources.Load("FoxMale") as GameObject;
+        }
+
+        Destroy(gameObject);
+        GameObject newFox = Instantiate(modelToLoad, transform.position, Quaternion.identity);
+        newFox.transform.parent = transform.parent;
+        newFox.GetComponent<FoxController>().hunger = hunger;
+        newFox.GetComponent<FoxController>().thirst = thirst;
+        newFox.GetComponent<FoxController>().energy = energy;
+        newFox.GetComponent<FoxController>().age = age;
 
     }
 }

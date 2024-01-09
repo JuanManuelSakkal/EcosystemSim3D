@@ -9,7 +9,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 2076095210231864321}
-  m_Layer: 7
+  m_Layer: 20
   m_Name: ChickRig_l_Leg_AuxSHJnt
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -46,7 +46,7 @@ GameObject:
   - component: {fileID: 9088223626665917619}
   - component: {fileID: 3877995172069566668}
   - component: {fileID: 2365981329635031791}
-  m_Layer: 7
+  m_Layer: 20
   m_Name: Chick
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -107,10 +107,13 @@ MonoBehaviour:
   hunger: 0
   thirst: 0
   energy: 10
+  desireToMate: 0
   gender: 0
   age: 5
   lifeExpectancy: 15
   mateAge: 5
+  pregnant: 0
+  pregnancyPeriod: 20
   foodLayerMask:
     serializedVersion: 2
     m_Bits: 64
@@ -216,7 +219,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 298642820160024353}
-  m_Layer: 7
+  m_Layer: 20
   m_Name: ChickRig_SHJntGrp
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -249,7 +252,7 @@ GameObject:
   m_Component:
   - component: {fileID: 480227108308229819}
   - component: {fileID: 5946381449860501661}
-  m_Layer: 7
+  m_Layer: 20
   m_Name: SA_Animal_Chick
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -340,7 +343,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 3546716556622212702}
-  m_Layer: 7
+  m_Layer: 20
   m_Name: ChickRig_Head_AuxSHJnt
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -371,7 +374,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 6331215448654771048}
-  m_Layer: 7
+  m_Layer: 20
   m_Name: ChickRig_r_Leg_AuxSHJnt
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -403,7 +406,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 4366241887347881492}
-  m_Layer: 7
+  m_Layer: 20
   m_Name: ChickRig_FootR_AuxSHJnt
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -434,7 +437,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 4156506667393827178}
-  m_Layer: 7
+  m_Layer: 20
   m_Name: ChickRig_FootL_AuxSHJnt
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -465,7 +468,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 210348179680769361}
-  m_Layer: 7
+  m_Layer: 20
   m_Name: ChickRig_Tail_AuxSHJnt
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -496,7 +499,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 4833674921083368479}
-  m_Layer: 7
+  m_Layer: 20
   m_Name: ChickRig_ROOTSHJnt
   m_TagString: Untagged
   m_Icon: {fileID: 0}

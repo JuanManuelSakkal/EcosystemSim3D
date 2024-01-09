@@ -10,7 +10,7 @@ GameObject:
   m_Component:
   - component: {fileID: 2402728118545039919}
   - component: {fileID: 2299158899933932083}
-  m_Layer: 0
+  m_Layer: 19
   m_Name: SM_Stag_02
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -95,7 +95,7 @@ GameObject:
   m_Component:
   - component: {fileID: 3671689891386960756}
   - component: {fileID: 6510887169359561188}
-  m_Layer: 0
+  m_Layer: 19
   m_Name: SM_Moose_Female_03
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -183,7 +183,8 @@ GameObject:
   - component: {fileID: 7510040185402762611}
   - component: {fileID: 2749456917073169912}
   - component: {fileID: 1428794759780653815}
-  m_Layer: 0
+  - component: {fileID: 8886050089102256221}
+  m_Layer: 19
   m_Name: DeerChild
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -300,10 +301,13 @@ MonoBehaviour:
   hunger: 0
   thirst: 0
   energy: 10
+  desireToMate: 0
   gender: 0
   age: 5
   lifeExpectancy: 15
   mateAge: 5
+  pregnant: 0
+  pregnancyPeriod: 20
   foodLayerMask:
     serializedVersion: 2
     m_Bits: 64
@@ -325,6 +329,33 @@ MonoBehaviour:
   escapeRoute: {x: 0, y: 0, z: 0}
   target: {fileID: 0}
   energyLog: 0
+--- !u!54 &8886050089102256221
+Rigidbody:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3186234923695973961}
+  serializedVersion: 4
+  m_Mass: 1
+  m_Drag: 0
+  m_AngularDrag: 0.05
+  m_CenterOfMass: {x: 0, y: 0, z: 0}
+  m_InertiaTensor: {x: 1, y: 1, z: 1}
+  m_InertiaRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ImplicitCom: 1
+  m_ImplicitTensor: 1
+  m_UseGravity: 1
+  m_IsKinematic: 0
+  m_Interpolate: 0
+  m_Constraints: 0
+  m_CollisionDetection: 0
 --- !u!1 &3837620021917252578
 GameObject:
   m_ObjectHideFlags: 0
@@ -335,7 +366,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1306461223283303993}
   - component: {fileID: 4385415968435494404}
-  m_Layer: 0
+  m_Layer: 19
   m_Name: SM_Stag_01
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -420,7 +451,7 @@ GameObject:
   m_Component:
   - component: {fileID: 6031946912276890383}
   - component: {fileID: 1448574791457718909}
-  m_Layer: 0
+  m_Layer: 19
   m_Name: SM_Doe_03
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -505,7 +536,7 @@ GameObject:
   m_Component:
   - component: {fileID: 6970403521444783324}
   - component: {fileID: 7766076859212785550}
-  m_Layer: 0
+  m_Layer: 19
   m_Name: SM_Moose_Male_02
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -590,7 +621,7 @@ GameObject:
   m_Component:
   - component: {fileID: 3072539387681882590}
   - component: {fileID: 1437913618799762066}
-  m_Layer: 0
+  m_Layer: 19
   m_Name: SM_Stag_03
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -675,7 +706,7 @@ GameObject:
   m_Component:
   - component: {fileID: 56586030677478783}
   - component: {fileID: 5693426748229464977}
-  m_Layer: 0
+  m_Layer: 19
   m_Name: SM_Moose_Female_02
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -760,7 +791,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1072752204861265463}
   - component: {fileID: 6476416430715100567}
-  m_Layer: 0
+  m_Layer: 19
   m_Name: SM_Moose_Male_03
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -845,7 +876,7 @@ GameObject:
   m_Component:
   - component: {fileID: 6568126818082527851}
   - component: {fileID: 4845567503295098694}
-  m_Layer: 0
+  m_Layer: 19
   m_Name: SM_Moose_Male_01
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -930,7 +961,7 @@ GameObject:
   m_Component:
   - component: {fileID: 8047114833206942382}
   - component: {fileID: 7342866144662850950}
-  m_Layer: 0
+  m_Layer: 19
   m_Name: SM_Doe_02
   m_TagString: Untagged
   m_Icon: {fileID: 0}

@@ -12,10 +12,15 @@ public abstract class PredatorController : AnimalController
             AnimalController prey = collisionInfo.gameObject.GetComponent<AnimalController>();
             if (prey.state == AnimalState.Dead){
                 Eat(collisionInfo.gameObject);
+                target = null;
             } else {
                 Stop();
                 collisionInfo.gameObject.GetComponent<AnimalController>()?.Die();
+                target = null;
             }
+        }
+        if(collisionInfo.gameObject == target && mateLayerMask.Includes(collisionInfo.gameObject.layer)){
+            Mate(collisionInfo.gameObject);
         }
     }
 }
