@@ -11,6 +11,8 @@ public class ChickenController : AnimalController
         FieldOfView fov = gameObject.GetComponent<FieldOfView>();
         fov.viewRadius = 15f;
         fov.viewAngle = 100f;
+        energyRate = 1f;
+        wanderSpeed = 1.5f;
     }
     override protected bool IsHungry(){
         return hunger > maxHunger / 3;
@@ -27,5 +29,22 @@ public class ChickenController : AnimalController
         if(collisionInfo.gameObject == target && foodLayerMask.Includes(collisionInfo.gameObject.layer)){
             Eat(collisionInfo.gameObject);
         }
+        if(collisionInfo.gameObject == target && mateLayerMask.Includes(collisionInfo.gameObject.layer)){
+            Mate(collisionInfo.gameObject);
+        }
     } 
+
+    protected override void TryToMate(){
+        AccelerateToSpeed(maxSpeed * urgencyLevel);
+        GoToTarget();
+    }
+
+    protected override void HaveChildren()
+    {
+        LayEggs();
+    }
+
+    void LayEggs(){
+        Instantiate(Resources.Load("Eggs") as GameObject, new Vector3(transform.position.x, transform.position.y, transform.position.z -1), Quaternion.identity);
+    }
 }

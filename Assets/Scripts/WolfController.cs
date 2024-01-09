@@ -17,4 +17,11 @@ public class WolfController : PredatorController
     override protected bool IsHungry(){
         return hunger > maxHunger / 2;
     }
+    override protected void TryToMate(){
+
+    }
+    
+    override protected void HaveChildren(){
+
+    }
 }

@@ -24,12 +24,12 @@
 /[Aa]ssets/Plugins/Editor/JetBrains*
 
 #Assets
-/Assets/"Course Library"/
-/Assets/Conifers[BOTD]
-/Assets/Animals_FREE
-/Assets/ADG_Textures
-/Assets/GrassFlowers
-/Assets/TerrainSampleAssets
+/Assets/External/"Course Library"/
+/Assets/External/Conifers[BOTD]
+/Assets/External/Animals_FREE
+/Assets/External/ADG_Textures
+/Assets/External/GrassFlowers
+/Assets/External/TerrainSampleAssets
 
 # Visual Studio cache directory
 .vs/

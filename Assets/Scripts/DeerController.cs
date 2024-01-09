@@ -9,10 +9,11 @@ public class DeerController : AnimalController
     new void Start()
     {
         base.Start();
-        maxSpeed = 10f;
+        maxSpeed = 9f;
         FieldOfView fov = gameObject.GetComponent<FieldOfView>();
         fov.viewRadius = 45f;
         fov.viewAngle = 100f;
+        wanderSpeed = 3f;
         
     }
     override protected bool IsHungry(){
@@ -23,6 +24,12 @@ public class DeerController : AnimalController
     {
         AccelerateToSpeed(maxSpeed/2);
         GoToTarget();
+    }
+    override protected void TryToMate(){
+
+    }
+    override protected void HaveChildren(){
+
     }
     void OnCollisionEnter(Collision collisionInfo)
     {

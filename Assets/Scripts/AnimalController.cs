@@ -9,6 +9,8 @@ public enum AnimalState
     Resting,
     Eating,
     LookingForFood,
+    LookingForMate,
+    Mating,
     Hunting,
     Fleeing,
     Dead
@@ -20,6 +22,7 @@ public enum Needs
     Water,
     Rest,
     Mate,
+    Escape,
     None
 }
 
@@ -41,16 +44,28 @@ public abstract class AnimalController : MonoBehaviour
     protected float maxThirst = 10f;
     public float energy = 10f;
     protected float maxEnergy = 10f;
-    protected float hungerRate = 0.1f;
-    protected float thirstRate = 0.1f;
-    protected float energyRate = 0.1f;
+
+    //individual characteristics
+    protected float hungerRate = 0.2f; //0 to 1
+    protected float thirstRate = 0.1f; //0 to 1
+    protected float energyRate = 0.1f; //0 to 1
+    protected float matingRate = 1f; // 1 to 10
+    public Gender gender;
+    public float age = 5;
+    public float lifeExpectancy = 15;
+    public float mateAge = 5;
+    public bool pregnant = false;
+    public float pregnancyPeriod = 20f;
 
     public LayerMask foodLayerMask;
+    public LayerMask mateLayerMask;
     public AnimalState state = AnimalState.Wandering;
     public Needs priorityNeed = Needs.None;
 
     //movement
-    public float maxSpeed = 3f;
+    public float maxSpeed = 5f;
+
+    public float wanderSpeed = 3f;
     public float speed = 0f;
     public Vector3 velocity = Vector3.zero;
     public float wanderStrength = 0.1f;
@@ -59,10 +74,13 @@ public abstract class AnimalController : MonoBehaviour
     private Vector3 desiredDirection;
     public float accelerationStrength = 1f;
 
-    public float urgencyLevel = 0f;
+    public float urgencyLevel = 0.5f;
+    public float fearLevel = 0f;
+    public Vector3 escapeRoute = Vector3.zero;
 
     public GameObject target;
    
+    public float energyLog;
     Animator animator;
 
     private float nonDivideByZeroConst = 0.01f;
@@ -92,14 +110,15 @@ public abstract class AnimalController : MonoBehaviour
     void UpdateLifeStatsOverTime(){
         hunger += hungerRate / (energy + nonDivideByZeroConst) * Time.deltaTime;
         //thirst += thirstRate / (energy + nonDivideByZeroConst) * Time.deltaTime;
-        energy -= energyRate * (hunger/2 + thirst/2) * speed/10f * Time.deltaTime - 0.01f;
+        energy -= energyRate * (hunger/2 + thirst/2) * speed/maxSpeed * Time.deltaTime - 0.01f;
         energy = Mathf.Clamp(energy, 0, maxEnergy);
         hunger = Mathf.Clamp(hunger, 0, maxHunger);
         thirst = Mathf.Clamp(thirst, 0, maxThirst);
-        if(hunger == maxHunger) life -= 0.5f * Time.deltaTime;
-        if(thirst == maxThirst) life -= 0.5f * Time.deltaTime;
-        if(energy == 0) life -= 0.5f * Time.deltaTime;
+        if(hunger == maxHunger) life -= 0.1f * Time.deltaTime;
+        if(thirst == maxThirst) life -= 0.1f * Time.deltaTime;
+        if(energy == 0) life -= 0.1f * Time.deltaTime;
         if(life <= 0) Die();
+        age += 0.01f * Time.deltaTime;
     }
     void SetUrgencyLevelFromStats(){
         urgencyLevel = priorityNeed switch
@@ -112,12 +131,28 @@ public abstract class AnimalController : MonoBehaviour
         urgencyLevel = Mathf.Clamp(urgencyLevel, 0f, 1f);
     }
 
-    void SetPriorityNeed(){
-        float maxNeed = Mathf.Max(hunger, thirst, maxEnergy/Mathf.Max(energy, 1f), 1f);
+    void SetFearLevelAndEscapeRoute(){
+        FieldOfView fov = GetComponent<FieldOfView>();
+        Vector3 resultant = Vector3.zero;
+        foreach (GameObject scaryTarget in fov.scaryTargets) {
+            resultant += scaryTarget.transform.position - transform.position;
+            fearLevel += Vector3.Distance(transform.position, scaryTarget.transform.position) * scaryTarget.GetComponent<AnimalController>().speed  * Time.deltaTime;
+        }
+        if(fov.scaryTargets.Count == 0) fearLevel -= 1f * Time.deltaTime;
 
+        fearLevel = Mathf.Clamp(fearLevel, 0f, 10f);
+        escapeRoute = resultant.normalized * -1;
+    }
+
+    void SetPriorityNeed(){
+        float needToMate = mateAge >= age || pregnant ? 0 : lifeExpectancy/(age - mateAge) * matingRate;
+        float maxNeed = Mathf.Max(hunger, thirst, needToMate, maxEnergy/Mathf.Max(energy, 1f), fearLevel, 1f);
+
+        if(maxNeed == needToMate) priorityNeed = Needs.Mate;
         if(maxNeed == hunger) priorityNeed = Needs.Food;
         if(maxNeed == thirst) priorityNeed = Needs.Water;
         if(maxNeed == maxEnergy/Mathf.Max(energy, 1f)) priorityNeed = Needs.Rest;
+        if(maxNeed == fearLevel) priorityNeed = Needs.Escape;
         if(maxNeed <= 1) priorityNeed = Needs.None;
 
     }
@@ -131,9 +166,19 @@ public abstract class AnimalController : MonoBehaviour
 
     }    
     AnimalState HandleRestingState(){
-        if(energy >= maxEnergy * 0.8) return AnimalState.Wandering;
+        if(energy >= maxEnergy * 0.6f) return AnimalState.Wandering;
         else return AnimalState.Resting;
+    }
 
+    AnimalState HandleEscapeState() {
+        return AnimalState.Fleeing;
+    }
+
+    AnimalState HandleMateState() {
+        if(target == null) 
+            return AnimalState.LookingForMate;
+        else 
+            return AnimalState.Mating;
     }
 
     void UpdateState(){
@@ -147,6 +192,8 @@ public abstract class AnimalController : MonoBehaviour
             Needs.Food => HandleHungerState(),
             Needs.Water => AnimalState.Wandering,
             Needs.Rest => HandleRestingState(),
+            Needs.Escape => HandleEscapeState(),
+            Needs.Mate => HandleMateState(),
             _ => AnimalState.Wandering,
         };
     }
@@ -156,6 +203,7 @@ public abstract class AnimalController : MonoBehaviour
         {
             AnimalState.Wandering => LayerMask.GetMask("Nothing"),
             AnimalState.LookingForFood => foodLayerMask,
+            AnimalState.LookingForMate => mateLayerMask,
             AnimalState.Hunting => LayerMask.GetMask("Nothing"),
             _ => LayerMask.GetMask("Nothing"),
 
@@ -170,21 +218,20 @@ public abstract class AnimalController : MonoBehaviour
         if(energy < maxEnergy/2 && speed > 0){
             speed -= accelerationStrength/(energy + nonDivideByZeroConst) * Time.deltaTime;
         }
+        speed = Mathf.Clamp(speed, 0f, maxSpeed);
     } 
 
     protected void GoToTarget(){
         animator.SetBool("Eat_b", false);
         transform.rotation = Quaternion.Slerp(transform.rotation, Quaternion.LookRotation(target.transform.position - transform.position), steerStrength);
         transform.Translate(Vector3.forward * Time.deltaTime * speed);
-        animator.SetFloat("Speed_f", Mathf.Sqrt(speed / maxSpeed));
     }
 
-    void Wander(){
+    void Wander(float desiredSpeed){
         animator.SetBool("Eat_b", false);
         speed += Random.Range(-deltaSpeed, deltaSpeed * (1f + urgencyLevel)) * Time.deltaTime;
-        speed = Mathf.Clamp(speed, 0f, maxSpeed);
+        speed = Mathf.Clamp(speed, 0f, desiredSpeed);
         if(speed < 0.15) return;
-        animator.SetFloat("Speed_f", Mathf.Sqrt(speed / maxSpeed));
 
         Vector3 desiredDirection = WanderDirection();
         transform.rotation = Quaternion.Slerp(transform.rotation, Quaternion.LookRotation(desiredDirection), steerStrength);
@@ -206,25 +253,62 @@ public abstract class AnimalController : MonoBehaviour
             
     }
 
+    protected abstract void HaveChildren();
+
+    IEnumerator Pregnancy(){
+        yield return new WaitForSeconds(pregnancyPeriod);
+        pregnant = false;
+        HaveChildren();
+    }
+
+    void GetPregnant(){
+        pregnant = true;
+        StartCoroutine(Pregnancy());
+    }
+
+    protected void Mate(GameObject mate){
+        Stop();
+        if (mate.GetComponent<AnimalController>().gender == Gender.Female && !mate.GetComponent<AnimalController>().pregnant) {
+            mate.GetComponent<AnimalController>().GetPregnant();
+        } else if(gender == Gender.Female && !pregnant){
+            GetPregnant();
+        }
+    }
+
     void Rest(){
         speed = 0;
     }
 
+    protected abstract void TryToMate();
+
+    void Flee() {
+        AccelerateToSpeed(maxSpeed);
+        transform.rotation = Quaternion.Slerp(transform.rotation, Quaternion.LookRotation(escapeRoute), steerStrength);
+        transform.Translate(Vector3.forward * Time.deltaTime * speed);
+    }
+
     void HandleAnimalState(){
         switch(state){
+            case AnimalState.LookingForMate:
             case AnimalState.Wandering:
-                Wander();
+                Wander(wanderSpeed);
                 break;
             case AnimalState.LookingForFood:
-                Wander();
+                Wander(maxSpeed * urgencyLevel);
                 break;
             case AnimalState.Hunting:
                 Hunt();
+                break;
+            case AnimalState.Mating:
+                TryToMate();
                 break;
             case AnimalState.Eating:
                 break;
             case AnimalState.Resting:
                 Rest();
+                break;
+            case AnimalState.Fleeing:
+                Flee();
                 break;
             case AnimalState.Dead:
                 break;
@@ -235,6 +319,7 @@ public abstract class AnimalController : MonoBehaviour
     void FixedUpdate()
     {   
         if(state == AnimalState.Dead) return;
+        SetFearLevelAndEscapeRoute();
         UpdateState();
         UpdateLifeStatsOverTime();
         SetFoVMask();

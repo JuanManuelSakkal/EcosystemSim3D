@@ -17,4 +17,12 @@ public class FoxController : PredatorController
         return hunger > maxHunger / 3;
 
     }
+
+    override protected void TryToMate(){
+
+    }
+    
+    override protected void HaveChildren(){
+
+    }
 }

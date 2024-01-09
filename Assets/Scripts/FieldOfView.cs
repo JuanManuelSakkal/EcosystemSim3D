@@ -12,13 +12,12 @@ public class FieldOfView : MonoBehaviour
     [Range(0,360)]
     public float viewAngle = 110;
 
-    public LayerMask homePheromoneMask;
-
-    public LayerMask foodMask;
+    public LayerMask dangerMask;
     public LayerMask targetMask;
     public LayerMask obstacleMask;
 
     public List<GameObject> visibleTargets = new List<GameObject>();
+    public List<GameObject> scaryTargets = new List<GameObject>();
     public List<GameObject> intenseTargets = new List<GameObject>();
 
     public Preference preference = Preference.Intensity;
@@ -29,6 +28,7 @@ public class FieldOfView : MonoBehaviour
     IEnumerator FindTargetsWithDelay(float delay) {
         while (true) {
             yield return new WaitForSeconds(delay);
+            FindScaryTargets();
             FindVisibleTargets();
             SetClosestTarget();
         }
@@ -46,6 +46,17 @@ public class FieldOfView : MonoBehaviour
         }
         if (closestTarget != null) {
             gameObject.GetComponent<AnimalController>().target = closestTarget;
+        }
+    }
+    void FindScaryTargets() {
+        scaryTargets.Clear();
+        Collider[] targetsInViewRadius = Physics.OverlapSphere(transform.position, viewRadius, dangerMask);    
+        foreach (Collider target in targetsInViewRadius) {
+            Vector3 directionToTarget = (target.transform.position - transform.position).normalized;
+            float distanceToTarget = Vector3.Distance(transform.position, target.transform.position);
+            if (!Physics.Raycast(transform.position, directionToTarget, distanceToTarget, obstacleMask)) {
+                scaryTargets.Add(target.gameObject);
+            }
         }
     }
 
