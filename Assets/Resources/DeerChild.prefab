@@ -184,6 +184,7 @@ GameObject:
   - component: {fileID: 2749456917073169912}
   - component: {fileID: 1428794759780653815}
   - component: {fileID: 8886050089102256221}
+  - component: {fileID: 258114140120984208}
   m_Layer: 19
   m_Name: DeerChild
   m_TagString: Untagged
@@ -329,6 +330,7 @@ MonoBehaviour:
   escapeRoute: {x: 0, y: 0, z: 0}
   target: {fileID: 0}
   energyLog: 0
+  animator: {fileID: 0}
 --- !u!54 &8886050089102256221
 Rigidbody:
   m_ObjectHideFlags: 0
@@ -356,6 +358,25 @@ Rigidbody:
   m_Interpolate: 0
   m_Constraints: 0
   m_CollisionDetection: 0
+--- !u!114 &258114140120984208
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3186234923695973961}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b5d8afd6faeb7b445bfd903f7abc729b, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  speed: 5
+  directionChangeInterval: 1
+  maxHeadingChange: 180
+  heading: 0
+  targetRotation: {x: 0, y: 0, z: 0}
+  stopped: 0
+  changingArea: 0
 --- !u!1 &3837620021917252578
 GameObject:
   m_ObjectHideFlags: 0

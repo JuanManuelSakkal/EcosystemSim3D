@@ -104,6 +104,9 @@ PrefabInstance:
       addedObject: {fileID: 8583719486519517384}
     - targetCorrespondingSourceObject: {fileID: 100000, guid: f000ecb3e2f790d45bb3459ad897cb3e, type: 3}
       insertIndex: -1
+      addedObject: {fileID: 6941538182930627973}
+    - targetCorrespondingSourceObject: {fileID: 100000, guid: f000ecb3e2f790d45bb3459ad897cb3e, type: 3}
+      insertIndex: -1
       addedObject: {fileID: -2215499329732896478}
     - targetCorrespondingSourceObject: {fileID: 100000, guid: f000ecb3e2f790d45bb3459ad897cb3e, type: 3}
       insertIndex: -1
@@ -138,6 +141,25 @@ BoxCollider:
   serializedVersion: 3
   m_Size: {x: 0.05, y: 0.19, z: 0.25}
   m_Center: {x: 0, y: 0.09, z: 0.03}
+--- !u!114 &6941538182930627973
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3946217731412082118}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b5d8afd6faeb7b445bfd903f7abc729b, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  speed: 5
+  directionChangeInterval: 1
+  maxHeadingChange: 180
+  heading: 0
+  targetRotation: {x: 0, y: 0, z: 0}
+  stopped: 0
+  changingArea: 0
 --- !u!54 &-2215499329732896478
 Rigidbody:
   m_ObjectHideFlags: 0
@@ -236,3 +258,4 @@ MonoBehaviour:
   escapeRoute: {x: 0, y: 0, z: 0}
   target: {fileID: 0}
   energyLog: 0
+  animator: {fileID: 0}

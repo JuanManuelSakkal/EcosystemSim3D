@@ -305,6 +305,7 @@ GameObject:
   - component: {fileID: 718764210157680472}
   - component: {fileID: 2594603326041428104}
   - component: {fileID: -2530184073624353129}
+  - component: {fileID: 5776507360211205813}
   - component: {fileID: 8177007402797400939}
   - component: {fileID: 8172618196941541216}
   - component: {fileID: 3468154595308163470}
@@ -380,6 +381,25 @@ Rigidbody:
   m_Interpolate: 0
   m_Constraints: 0
   m_CollisionDetection: 0
+--- !u!114 &5776507360211205813
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3496877348926820960}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b5d8afd6faeb7b445bfd903f7abc729b, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  speed: 5
+  directionChangeInterval: 1
+  maxHeadingChange: 180
+  heading: 0
+  targetRotation: {x: 0, y: 0, z: 0}
+  stopped: 0
+  changingArea: 0
 --- !u!65 &8177007402797400939
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -444,6 +464,7 @@ MonoBehaviour:
   hunger: 0
   thirst: 0
   energy: 10
+  desireToMate: 0
   gender: 1
   age: 5
   lifeExpectancy: 15
@@ -471,6 +492,7 @@ MonoBehaviour:
   escapeRoute: {x: 0, y: 0, z: 0}
   target: {fileID: 0}
   energyLog: 0
+  animator: {fileID: 0}
 --- !u!1 &3623364729137222849
 GameObject:
   m_ObjectHideFlags: 0

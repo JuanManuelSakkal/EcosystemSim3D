@@ -66,7 +66,7 @@ public abstract class AnimalController : MonoBehaviour
 
     //movement
     public float maxSpeed = 5f;
-    public float wanderSpeed = 3f;
+    public float wanderSpeed = 1.5f;
     public float speed = 0f;
     public Vector3 velocity = Vector3.zero;
     public float wanderStrength = 0.05f;
@@ -77,24 +77,21 @@ public abstract class AnimalController : MonoBehaviour
 
     public float urgencyLevel = 0.5f;
     public float fearLevel = 0f;
+    
+    [HideInInspector]
     public Vector3 escapeRoute = Vector3.zero;
 
     public GameObject target;
    
     public float energyLog;
-    Animator animator;
+    [HideInInspector]
+    public Animator animator;
 
     private float nonDivideByZeroConst = 0.01f;
     public void Start()
     {
         animator = gameObject.GetComponent<Animator>();
         animator.SetFloat("Speed_f", 0f);
-    }
-
-    Vector3 WanderDirection()
-    {
-        desiredDirection = (desiredDirection + new Vector3(Random.Range(-wanderStrength, wanderStrength), 0, Random.Range(-wanderStrength, wanderStrength))).normalized;
-        return desiredDirection;
     }
 
     public void Die(){
@@ -188,10 +185,21 @@ public abstract class AnimalController : MonoBehaviour
             return AnimalState.Mating;
     }
 
+    void HandleStateChange(AnimalState previousState){
+        Wander wanderController = GetComponent<Wander>();
+        if(previousState == AnimalState.Wandering && state != AnimalState.Wandering){
+            wanderController.StopWandering();
+        }
+        if(state == AnimalState.Wandering && previousState != AnimalState.Wandering){
+            wanderController.StartWandering();
+        }
+    }
+
     void UpdateState(){
         if(state == AnimalState.Eating && target != null) return;
         else animator.SetBool("Eat_b", false);
 
+        AnimalState previousState = state;
         SetPriorityNeed();
         SetUrgencyLevelFromStats();
         state = priorityNeed switch
@@ -203,6 +211,8 @@ public abstract class AnimalController : MonoBehaviour
             Needs.Mate => HandleMateState(),
             _ => AnimalState.Wandering,
         };
+
+        //HandleStateChange(previousState);
     }
 
     void SetFoVMask(){
@@ -240,13 +250,12 @@ public abstract class AnimalController : MonoBehaviour
         speed = Mathf.Clamp(speed, 0f, desiredSpeed);
         if(speed < 0.15) return;
 
-        Vector3 desiredDirection = WanderDirection();
+   /*      Vector3 desiredDirection = WanderDirection();
         transform.rotation = Quaternion.Slerp(transform.rotation, Quaternion.LookRotation(desiredDirection), steerStrength);
-
-        transform.Translate(Vector3.forward * Time.deltaTime * speed);
+        transform.Translate(Vector3.forward * Time.deltaTime * speed); */
     }
 
-    protected void Stop(){
+    public void Stop(){
             speed = 0;
             animator.SetFloat("Speed_f", 0f);
     }

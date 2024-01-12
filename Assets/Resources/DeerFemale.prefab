@@ -96,6 +96,7 @@ GameObject:
   - component: {fileID: 6871694921032393495}
   - component: {fileID: 2053874383588305404}
   - component: {fileID: 7943075997890748536}
+  - component: {fileID: -5017540326659065106}
   - component: {fileID: 5276620685229729025}
   - component: {fileID: 4735467093404062899}
   - component: {fileID: 3848814179443537734}
@@ -179,6 +180,25 @@ Rigidbody:
   m_Interpolate: 0
   m_Constraints: 0
   m_CollisionDetection: 0
+--- !u!114 &-5017540326659065106
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2165883415105547374}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b5d8afd6faeb7b445bfd903f7abc729b, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  speed: 5
+  directionChangeInterval: 1
+  maxHeadingChange: 180
+  heading: 0
+  targetRotation: {x: 0, y: 0, z: 0}
+  stopped: 0
+  changingArea: 0
 --- !u!65 &5276620685229729025
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -271,6 +291,7 @@ MonoBehaviour:
   escapeRoute: {x: 0, y: 0, z: 0}
   target: {fileID: 0}
   energyLog: 0
+  animator: {fileID: 0}
 --- !u!1 &3919589037847125577
 GameObject:
   m_ObjectHideFlags: 0
