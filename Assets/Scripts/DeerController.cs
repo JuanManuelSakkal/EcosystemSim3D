@@ -67,5 +67,9 @@ public class DeerController : AnimalController
             Mate(collisionInfo.gameObject);
             target = null;
         }
+        if(collisionInfo.gameObject == target && LayerMask.NameToLayer("Water") == collisionInfo.gameObject.layer){
+            Drink();
+            target = null;
+        }
     } 
 }
