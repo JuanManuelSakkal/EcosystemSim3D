@@ -11,7 +11,7 @@ GameObject:
   - component: {fileID: 8660354936210749490}
   - component: {fileID: 955534006422514408}
   - component: {fileID: 4116350837691235769}
-  m_Layer: 0
+  m_Layer: 11
   m_Name: Nest_25_LOD2
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -94,9 +94,9 @@ GameObject:
   m_Component:
   - component: {fileID: 2928758567338470198}
   - component: {fileID: 608640389941887450}
-  - component: {fileID: 4469781161495054437}
   - component: {fileID: 1267111152614156806}
-  m_Layer: 0
+  - component: {fileID: -180380976217262018}
+  m_Layer: 11
   m_Name: Eggs
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -148,8 +148,20 @@ LODGroup:
     renderers:
     - renderer: {fileID: 4116350837691235769}
   m_Enabled: 1
---- !u!64 &4469781161495054437
-MeshCollider:
+--- !u!114 &1267111152614156806
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1277263527484182167}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 8fe8f5bc6cdc3874ea3bb95eb2c41a9d, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+--- !u!65 &-180380976217262018
+BoxCollider:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
@@ -166,22 +178,9 @@ MeshCollider:
   m_IsTrigger: 0
   m_ProvidesContacts: 0
   m_Enabled: 1
-  serializedVersion: 5
-  m_Convex: 0
-  m_CookingOptions: 30
-  m_Mesh: {fileID: -1645736075594886634, guid: 19e153ca6b890704196f4d5e05ed483e, type: 3}
---- !u!114 &1267111152614156806
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1277263527484182167}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 8fe8f5bc6cdc3874ea3bb95eb2c41a9d, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
+  serializedVersion: 3
+  m_Size: {x: 0.78, y: 0.31, z: 0.82}
+  m_Center: {x: 0.03, y: 0.11, z: 0.02}
 --- !u!1 &5211864336021976574
 GameObject:
   m_ObjectHideFlags: 0
@@ -193,7 +192,7 @@ GameObject:
   - component: {fileID: 9135734290151521331}
   - component: {fileID: 7854213619785695176}
   - component: {fileID: 5044113296312025350}
-  m_Layer: 0
+  m_Layer: 11
   m_Name: Nest_25_LOD0
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -277,7 +276,7 @@ GameObject:
   - component: {fileID: 4137302400104253510}
   - component: {fileID: 2914551250888367596}
   - component: {fileID: 6371770682503214878}
-  m_Layer: 0
+  m_Layer: 11
   m_Name: Nest_25_LOD1
   m_TagString: Untagged
   m_Icon: {fileID: 0}

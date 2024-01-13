@@ -17,8 +17,9 @@ public class ObjectSpawner : MonoBehaviour
 
         return point;
     }
-    private void Start()
-    {
+
+    private void SpawnApples(){
+
         GameObject appleGroupsContainer = GameObject.Find("AppleGroups");
         var terrain = FindObjectOfType<Terrain>();
 
@@ -32,6 +33,18 @@ public class ObjectSpawner : MonoBehaviour
                 GetRandomPointOnTerrain(terrain, minXZ, maxXZ),
                 Quaternion.identity).transform.parent = appleGroupsContainer.transform;
         }
+    }
+
+    IEnumerator SpawnApplesRoutine(){
+        while(true){
+            SpawnApples();
+            yield return new WaitForSeconds(60f);
+        }
+    }
+
+    private void Start()
+    {
+        StartCoroutine(SpawnApplesRoutine());
     }
 
 }

@@ -28,12 +28,16 @@ public class ChickenController : AnimalController
     {
         if(collisionInfo.gameObject == target && foodLayerMask.Includes(collisionInfo.gameObject.layer)){
             Eat(collisionInfo.gameObject);
-            target = null;
         }
         if(collisionInfo.gameObject == target && mateLayerMask.Includes(collisionInfo.gameObject.layer)){
             Mate(collisionInfo.gameObject);
             target = null;
         }
+        if(collisionInfo.gameObject == target && LayerMask.NameToLayer("Water") == collisionInfo.gameObject.layer){
+            Drink();
+            target = null;
+        }
+        
     } 
 
     protected override void TryToMate(){

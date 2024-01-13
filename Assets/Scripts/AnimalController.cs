@@ -9,9 +9,12 @@ public enum AnimalState
     Resting,
     Eating,
     LookingForFood,
+    LookingForWater,
     LookingForMate,
+    GoingToTarget,
     Mating,
     Hunting,
+    Drinking,
     Fleeing,
     Dead
 }
@@ -103,11 +106,16 @@ public abstract class AnimalController : MonoBehaviour
     }
 
     protected abstract bool IsHungry();
+    
+    bool IsThirsty(){
+        return thirst > maxThirst / 3;
+    }
+
     protected abstract void Hunt();
 
     void UpdateLifeStatsOverTime(){
         hunger += hungerRate / (energy + nonDivideByZeroConst) * Time.deltaTime;
-        //thirst += thirstRate / (energy + nonDivideByZeroConst) * Time.deltaTime;
+        thirst += thirstRate / (energy + nonDivideByZeroConst) * Time.deltaTime;
         energy -= energyRate * (hunger/2 + thirst/2) * speed/maxSpeed * Time.deltaTime - 0.01f;
         desireToMate += mateAge >= age || pregnant ? 0 : lifeExpectancy/(lifeExpectancy + age - mateAge) * matingRate * Time.deltaTime;
 
@@ -167,7 +175,13 @@ public abstract class AnimalController : MonoBehaviour
             return AnimalState.LookingForFood;
         else
             return AnimalState.Hunting;
-
+    }    
+    AnimalState HandleThirstState(){
+        if(!IsThirsty()) return AnimalState.Wandering;
+        if(target == null) 
+            return AnimalState.LookingForWater;
+        else
+            return AnimalState.GoingToTarget;
     }    
     AnimalState HandleRestingState(){
         if(energy >= maxEnergy * 0.6f) return AnimalState.Wandering;
@@ -196,7 +210,7 @@ public abstract class AnimalController : MonoBehaviour
     }
 
     void UpdateState(){
-        if(state == AnimalState.Eating && target != null) return;
+        if(state == AnimalState.Eating && target != null || state == AnimalState.Drinking) return;
         else animator.SetBool("Eat_b", false);
 
         AnimalState previousState = state;
@@ -205,7 +219,7 @@ public abstract class AnimalController : MonoBehaviour
         state = priorityNeed switch
         {
             Needs.Food => HandleHungerState(),
-            Needs.Water => AnimalState.Wandering,
+            Needs.Water => HandleThirstState(),
             Needs.Rest => HandleRestingState(),
             Needs.Escape => HandleEscapeState(),
             Needs.Mate => HandleMateState(),
@@ -220,6 +234,7 @@ public abstract class AnimalController : MonoBehaviour
         {
             AnimalState.Wandering => LayerMask.GetMask("Nothing"),
             AnimalState.LookingForFood => foodLayerMask,
+            AnimalState.LookingForWater => LayerMask.GetMask("Water"),
             AnimalState.LookingForMate => mateLayerMask,
             AnimalState.Hunting => LayerMask.GetMask("Nothing"),
             _ => LayerMask.GetMask("Nothing"),
@@ -299,6 +314,21 @@ public abstract class AnimalController : MonoBehaviour
         speed = 0;
     }
 
+    public void Drink(){
+        Stop();
+        Debug.Log("Drinking");
+        animator.SetBool("Eat_b", true);
+        state = AnimalState.Drinking;
+        thirst -= thirstRate * 10f * Time.deltaTime;
+        thirst = Mathf.Clamp(thirst, 0, maxThirst);
+        
+        if(thirst == 0){
+            state = AnimalState.Wandering;
+            animator.SetBool("Eat_b", false);
+        } 
+        
+    }
+
     protected abstract void TryToMate();
     protected abstract void GrowUp();
 
@@ -315,7 +345,12 @@ public abstract class AnimalController : MonoBehaviour
                 Wander(wanderSpeed);
                 break;
             case AnimalState.LookingForFood:
+            case AnimalState.LookingForWater:
                 Wander(maxSpeed * urgencyLevel);
+                break;
+            case AnimalState.GoingToTarget:
+                AccelerateToSpeed(maxSpeed * urgencyLevel);
+                GoToTarget();
                 break;
             case AnimalState.Hunting:
                 Hunt();
@@ -324,6 +359,9 @@ public abstract class AnimalController : MonoBehaviour
                 TryToMate();
                 break;
             case AnimalState.Eating:
+                break;
+            case AnimalState.Drinking:
+                Drink();
                 break;
             case AnimalState.Resting:
                 Rest();

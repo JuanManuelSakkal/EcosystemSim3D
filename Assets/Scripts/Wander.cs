@@ -32,7 +32,8 @@ public class Wander : MonoBehaviour
 	bool isInAWanderingState(){
 		return controller.state == AnimalState.Wandering || 
 			controller.state == AnimalState.LookingForFood || 
-			controller.state == AnimalState.LookingForMate;
+			controller.state == AnimalState.LookingForMate ||
+			controller.state == AnimalState.LookingForWater;
 	}
 
 	void Update ()
