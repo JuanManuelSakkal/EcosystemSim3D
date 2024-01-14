@@ -13,6 +13,7 @@ public class ChickenController : AnimalController
         fov.viewAngle = 100f;
         energyRate = 1f;
         wanderSpeed = 1.5f;
+        foodLayerMask = LayerMask.GetMask("Apple");
     }
     override protected bool IsHungry(){
         return hunger > maxHunger / 3;
@@ -57,10 +58,13 @@ public class ChickenController : AnimalController
     protected override void GrowUp()
     {
         GameObject modelToLoad;
+        LayerMask newMateLayerMask;
         if(gender == Gender.Female){
             modelToLoad = Random.Range(0, 2) > 1 ? Resources.Load("ChickenBrown") as GameObject : Resources.Load("ChickenWhite") as GameObject;
+            newMateLayerMask = LayerMask.GetMask("ChickenM");
         } else {
             modelToLoad = Resources.Load("RoosterBrown") as GameObject;
+            newMateLayerMask = LayerMask.GetMask("ChickenF");
         }
 
         Destroy(gameObject);
@@ -70,5 +74,6 @@ public class ChickenController : AnimalController
         newChicken.GetComponent<ChickenController>().thirst = thirst;
         newChicken.GetComponent<ChickenController>().energy = energy;
         newChicken.GetComponent<ChickenController>().age = age;
+        newChicken.GetComponent<ChickenController>().mateLayerMask = newMateLayerMask;
     }
 }

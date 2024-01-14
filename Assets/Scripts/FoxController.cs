@@ -11,7 +11,16 @@ public class FoxController : PredatorController
         FieldOfView fov = gameObject.GetComponent<FieldOfView>();
         fov.viewRadius = 45f;
         fov.viewAngle = 100f;
+        foodLayerMask = GetFoodLayerMask();
         
+    }
+    
+    LayerMask GetFoodLayerMask(){
+        if(age >= mateAge){
+            return LayerMask.GetMask("Eggs", "Chick", "ChickenF", "ChickenM");
+        } else {
+            return LayerMask.GetMask("Eggs", "Chick");
+        }
     }
     override protected bool IsHungry(){
         return hunger > maxHunger / 3;
@@ -43,10 +52,13 @@ public class FoxController : PredatorController
     }
     override protected void GrowUp(){
         GameObject modelToLoad;
+        LayerMask newMateLayerMask;
         if(gender == Gender.Female){
             modelToLoad = Resources.Load("FoxFemale") as GameObject;
+            newMateLayerMask = LayerMask.GetMask("FoxM");
         } else {
             modelToLoad = Resources.Load("FoxMale") as GameObject;
+            newMateLayerMask = LayerMask.GetMask("FoxF");
         }
 
         Destroy(gameObject);
@@ -56,6 +68,8 @@ public class FoxController : PredatorController
         newFox.GetComponent<FoxController>().thirst = thirst;
         newFox.GetComponent<FoxController>().energy = energy;
         newFox.GetComponent<FoxController>().age = age;
+        newFox.GetComponent<FoxController>().mateLayerMask = newMateLayerMask;
+        newFox.GetComponent<FoxController>().foodLayerMask = GetFoodLayerMask();
 
     }
 }

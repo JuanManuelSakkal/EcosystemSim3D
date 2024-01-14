@@ -484,7 +484,7 @@ MonoBehaviour:
   speed: 0
   velocity: {x: 0, y: 0, z: 0}
   wanderStrength: 0.2
-  steerStrength: 0.01
+  steerStrength: 0.3
   deltaSpeed: 1
   accelerationStrength: 0.1
   urgencyLevel: 0.5

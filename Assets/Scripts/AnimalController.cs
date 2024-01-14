@@ -73,7 +73,7 @@ public abstract class AnimalController : MonoBehaviour
     public float speed = 0f;
     public Vector3 velocity = Vector3.zero;
     public float wanderStrength = 0.05f;
-    public float steerStrength = 0.1f;
+    public float steerStrength = 0.3f;
     public float deltaSpeed = 1f;
     private Vector3 desiredDirection;
     public float accelerationStrength = 1f;

@@ -14,6 +14,7 @@ public class DeerController : AnimalController
         fov.viewRadius = 45f;
         fov.viewAngle = 100f;
         wanderSpeed = 3f;
+        foodLayerMask = LayerMask.GetMask("Apple");
         
     }
     override protected bool IsHungry(){
@@ -42,19 +43,23 @@ public class DeerController : AnimalController
     }
     override protected void GrowUp(){
         GameObject modelToLoad;
+        LayerMask newMateLayerMask;
         if(gender == Gender.Female){
             modelToLoad = Resources.Load("DeerFemale") as GameObject;
+            newMateLayerMask = LayerMask.GetMask("DeerM");
         } else {
-            modelToLoad = Resources.Load("DeerfMale") as GameObject;
+            modelToLoad = Resources.Load("DeerMale") as GameObject;
+            newMateLayerMask = LayerMask.GetMask("DeerF");
         }
 
         Destroy(gameObject);
-        GameObject newChicken = Instantiate(modelToLoad, transform.position, Quaternion.identity);
-        newChicken.transform.parent = transform.parent;
-        newChicken.GetComponent<DeerController>().hunger = hunger;
-        newChicken.GetComponent<DeerController>().thirst = thirst;
-        newChicken.GetComponent<DeerController>().energy = energy;
-        newChicken.GetComponent<DeerController>().age = age;
+        GameObject newDeer = Instantiate(modelToLoad, transform.position, Quaternion.identity);
+        newDeer.transform.parent = transform.parent;
+        newDeer.GetComponent<DeerController>().hunger = hunger;
+        newDeer.GetComponent<DeerController>().thirst = thirst;
+        newDeer.GetComponent<DeerController>().energy = energy;
+        newDeer.GetComponent<DeerController>().age = age;
+        newDeer.GetComponent<DeerController>().mateLayerMask = newMateLayerMask;
 
     }
     void OnCollisionEnter(Collision collisionInfo)

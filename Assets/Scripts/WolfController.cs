@@ -13,6 +13,7 @@ public class WolfController : PredatorController
         FieldOfView fov = gameObject.GetComponent<FieldOfView>();
         fov.viewRadius = 45f;
         fov.viewAngle = 100f;
+        foodLayerMask = GetFoodLayerMask();
     }
     override protected bool IsHungry(){
         return hunger > maxHunger / 3;
@@ -21,6 +22,14 @@ public class WolfController : PredatorController
         AccelerateToSpeed(maxSpeed * urgencyLevel);
         GoToTarget();
 
+    }
+
+    LayerMask GetFoodLayerMask(){
+        if(age >= mateAge){
+            return LayerMask.GetMask("Eggs", "Chick", "ChickenF", "ChickenM", "DeerChild", "DeerM", "DeerF");
+        } else {
+            return LayerMask.GetMask("Eggs", "Chick", "ChickenF", "ChickenM");
+        }
     }
 
     private void InitializeWolf(GameObject newWolf){
@@ -39,10 +48,13 @@ public class WolfController : PredatorController
     }
     override protected void GrowUp(){
         GameObject modelToLoad;
+        LayerMask newMateLayerMask;
         if(gender == Gender.Female){
             modelToLoad = Resources.Load("WolfFemale") as GameObject;
+            newMateLayerMask = LayerMask.GetMask("WolfM");
         } else {
             modelToLoad = Resources.Load("WolfMale") as GameObject;
+            newMateLayerMask = LayerMask.GetMask("WolfF");
         }
 
         Destroy(gameObject);
@@ -52,5 +64,7 @@ public class WolfController : PredatorController
         newWolf.GetComponent<WolfController>().thirst = thirst;
         newWolf.GetComponent<WolfController>().energy = energy;
         newWolf.GetComponent<WolfController>().age = age;
+        newWolf.GetComponent<WolfController>().mateLayerMask = newMateLayerMask;
+        newWolf.GetComponent<WolfController>().foodLayerMask = GetFoodLayerMask();    
     }
 }
